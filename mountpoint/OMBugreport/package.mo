@@ -17,12 +17,6 @@ model MWE "Debug FMU situation"
         extent={{-10,-10},{10,10}},
         rotation=180,
         origin={80,30})));
-  IDEAS.Fluid.Sensors.EnthalpyFlowRate senEntFlo1(redeclare package Medium=Medium,
-      m_flow_nominal=m_flow_nominal)                                               annotation (Placement(
-        transformation(
-        extent={{-10,-10},{10,10}},
-        rotation=180,
-        origin={14,0})));
   IDEAS.Fluid.HeatExchangers.Heater_T hea(m_flow_nominal=m_flow_nominal, redeclare
       package Medium =                                                                            Medium,
     dp_nominal=10)                        annotation (Placement(transformation(
@@ -41,9 +35,6 @@ model MWE "Debug FMU situation"
     dpValve_nominal=10,
     use_inputFilter=false)
     annotation (Placement(transformation(extent={{4,50},{24,70}})));
-  IDEAS.Fluid.Sensors.EnthalpyFlowRate senEntFlo(redeclare package Medium=Medium,
-      m_flow_nominal=m_flow_nominal)
-    annotation (Placement(transformation(extent={{-20,50},{0,70}})));
   Modelica.Blocks.Sources.Constant const1(k=dp_nominal)
     annotation (Placement(transformation(extent={{-86,72},{-66,92}})));
   Modelica.Blocks.Sources.Pulse pulse(width=50, period=10) annotation (
@@ -59,34 +50,30 @@ model MWE "Debug FMU situation"
   Buildings.Utilities.IO.SignalExchange.Read reaQFloHea(y(unit="W"), description="Floor heating heat exchanged")
     "Floor heating heat exchanged"
     annotation (Placement(transformation(extent={{52,-26},{72,-6}})));
-equation
-  connect(embeddedPipe.heatPortEmb[1], fixedTemperature.port)
-    annotation (Line(points={{40,30},{70,30}}, color={191,0,0}));
-  connect(senEntFlo1.port_a, embeddedPipe.port_b) annotation (Line(points={{24,-1.72085e-15},
-          {30,-1.72085e-15},{30,20}}, color={0,127,255}));
-  connect(senEntFlo1.port_b, hea.port_a) annotation (Line(points={{4,7.21645e-16},
-          {-52,7.21645e-16},{-52,16}}, color={0,127,255}));
-  connect(const.y, hea.TSet)
-    annotation (Line(points={{-77,0},{-60,0},{-60,14}}, color={0,0,127}));
-  connect(hea.port_b, fan.port_a)
-    annotation (Line(points={{-52,36},{-52,60},{-46,60}}, color={0,127,255}));
-  connect(val.port_b, embeddedPipe.port_a)
-    annotation (Line(points={{24,60},{30,60},{30,40}}, color={0,127,255}));
-  connect(fan.port_b, senEntFlo.port_a)
-    annotation (Line(points={{-26,60},{-20,60}}, color={0,127,255}));
-  connect(senEntFlo.port_b, val.port_a)
-    annotation (Line(points={{0,60},{4,60}}, color={0,127,255}));
-  connect(const1.y, fan.dp_in)
-    annotation (Line(points={{-65,82},{-36,82},{-36,72}}, color={0,0,127}));
-  connect(senEntFlo.port_a, bou.ports[1]) annotation (Line(points={{-20,60},{-20,
-          58},{-22,58},{-22,74},{-14,74},{-14,86},{-22,86}}, color={0,127,255}));
-  connect(pulse.y, oveValve.u)
-    annotation (Line(points={{67,80},{50,80}}, color={0,0,127}));
-  connect(oveValve.y, val.y)
-    annotation (Line(points={{27,80},{14,80},{14,72}}, color={0,0,127}));
-  connect(embeddedPipe.QTot, reaQFloHea.u)
-    annotation (Line(points={{36,19},{36,-16},{50,-16}}, color={0,0,127}));
-  annotation (
+  equation
+    connect(embeddedPipe.heatPortEmb[1], fixedTemperature.port) annotation(
+      Line(points = {{40, 30}, {70, 30}}, color = {191, 0, 0}));
+    connect(const.y, hea.TSet) annotation(
+      Line(points = {{-77, 0}, {-60, 0}, {-60, 14}}, color = {0, 0, 127}));
+    connect(hea.port_b, fan.port_a) annotation(
+      Line(points = {{-52, 36}, {-52, 60}, {-46, 60}}, color = {0, 127, 255}));
+    connect(val.port_b, embeddedPipe.port_a) annotation(
+      Line(points = {{24, 60}, {30, 60}, {30, 40}}, color = {0, 127, 255}));
+    connect(const1.y, fan.dp_in) annotation(
+      Line(points = {{-65, 82}, {-36, 82}, {-36, 72}}, color = {0, 0, 127}));
+    connect(pulse.y, oveValve.u) annotation(
+      Line(points = {{67, 80}, {50, 80}}, color = {0, 0, 127}));
+    connect(oveValve.y, val.y) annotation(
+      Line(points = {{27, 80}, {14, 80}, {14, 72}}, color = {0, 0, 127}));
+    connect(embeddedPipe.QTot, reaQFloHea.u) annotation(
+      Line(points = {{36, 19}, {36, -16}, {50, -16}}, color = {0, 0, 127}));
+  connect(fan.port_b, val.port_a) annotation(
+      Line(points = {{-26, 60}, {4, 60}}, color = {0, 127, 255}));
+  connect(bou.ports[1], fan.port_b) annotation(
+      Line(points = {{-22, 86}, {-10, 86}, {-10, 60}, {-26, 60}}, color = {0, 127, 255}));
+  connect(hea.port_a, embeddedPipe.port_b) annotation(
+      Line(points = {{-52, 16}, {-52, 0}, {30, 0}, {30, 20}}, color = {0, 127, 255}));
+    annotation (
     Icon(coordinateSystem(preserveAspectRatio=false)),
     Diagram(coordinateSystem(preserveAspectRatio=false)),
     experiment(
