@@ -1,0 +1,4 @@
+loadFile("OMBugreport/package.mo");
+cd("fmu");
+buildModelFMU(OMBugreport.wrapped, "2.0", "cs");
+getErrorString();

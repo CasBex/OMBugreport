@@ -1,0 +1,4 @@
+loadFile("OMBugreport/package.mo");
+cd("native");
+simulate(OMBugreport.wrapped, startTime=0.0, stopTime=100.0, numberOfIntervals=100, method="cvode", outputFormat="csv");
+getErrorString();
